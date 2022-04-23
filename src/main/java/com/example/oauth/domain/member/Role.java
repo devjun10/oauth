@@ -1,6 +1,7 @@
-package com.example.oauth.domain;
+package com.example.oauth.domain.member;
 
 import lombok.Getter;
+
 @Getter
 public enum Role {
     USER("ROLE_USER"), ADMIN("ROLE_ADMIN");

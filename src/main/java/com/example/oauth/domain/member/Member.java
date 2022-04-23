@@ -1,4 +1,4 @@
-package com.example.oauth.domain;
+package com.example.oauth.domain.member;
 
 import lombok.AccessLevel;
 import lombok.Builder;

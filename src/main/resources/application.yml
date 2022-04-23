@@ -1,0 +1,28 @@
+spring:
+  datasource:
+    url:
+    driver-class-name:
+    username: ${USERNAME}
+    password: ${PASSWORD}
+
+oauth2:
+  user:
+    github:
+      client-id: ${CLIENT_ID}
+      client-secret: ${CLIENT_SECRET}
+      redirect-uri: ${REDIRECT_PATH}
+  provider:
+    github:
+      token-uri: ${TOKEN_URI}
+      user-info-uri: ${USER_INTO_URI}
+
+jwt:
+  token:
+    secret-key: ${SECRET_KEY}
+  access-token:
+    expire-length: ${EXPIRE_LENGTH}
+  refresh-token:
+    expire-length: ${EXPIRE_LENGTH}
+
+server:
+  port: 8080
