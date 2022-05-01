@@ -1,6 +1,7 @@
 package com.example.oauth.common.login.token.github;
 
-import com.example.oauth.common.login.token.TokenUtils;
+import com.example.oauth.common.login.token.WebToken;
+import com.example.oauth.common.login.token.WebTokenUtils;
 import com.example.oauth.common.login.token.configuration.ClientRegistration;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -18,11 +19,8 @@ import static org.springframework.http.HttpHeaders.ACCEPT;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
-/**
- *
- */
 @Component
-public class GithubTokenUtils implements TokenUtils {
+public class GithubWebTokenUtils implements WebTokenUtils {
 
     private static final String CLIENT_ID = "client_id";
     private static final String CLIENT_SECRET = "client_secret";
@@ -30,7 +28,7 @@ public class GithubTokenUtils implements TokenUtils {
 
     private GithubTokenParser githubTokenParser;
 
-    private GithubTokenUtils(GithubTokenParser githubTokenParser) {
+    private GithubWebTokenUtils(GithubTokenParser githubTokenParser) {
         this.githubTokenParser = githubTokenParser;
     }
 
@@ -67,14 +65,19 @@ public class GithubTokenUtils implements TokenUtils {
     }
 
     @Override
-    public Map<String, String> getUserDetailFrom(ClientRegistration clientRegistration, GithubToken gitToken) {
+    public Map<String, String> getUserDetailFrom(ClientRegistration clientRegistration, WebToken gitWebToken) {
         Assert.notNull(clientRegistration, "Registration must be not null.");
-        Assert.notNull(gitToken, "Token must be not null.");
-        HttpHeaders authorizationIncludedHeader = getAuthorizationIncludedHeader(gitToken.getGithubAccessToken());
+        Assert.notNull(gitWebToken, "Token must be not null.");
+        HttpHeaders authorizationIncludedHeader = getAuthorizationIncludedHeader(gitWebToken.getAccessToken());
         ResponseEntity<String> response = new RestTemplate()
                 .exchange(clientRegistration.getUserInfoUrl(), HttpMethod.GET,
                         new HttpEntity<String>(authorizationIncludedHeader), String.class);
         return getUserDetail(response.getBody());
+    }
+
+    @Override
+    public WebToken getWebToken(ClientRegistration clientRegistration, String code, HttpEntity<?> accessTokenRequest) {
+        return null;
     }
 
     @Override

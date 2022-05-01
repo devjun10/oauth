@@ -2,10 +2,11 @@ package com.example.oauth.common.login.token.github;
 
 
 import com.example.oauth.business.user.domain.Bio;
+import com.example.oauth.common.login.token.OauthUser;
 
 import java.util.Map;
 
-public class GithubUser {
+public class GithubUser implements OauthUser {
 
     private static final String ID = "id";
     private static final String EMAIL = "email";

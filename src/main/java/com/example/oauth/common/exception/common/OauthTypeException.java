@@ -1,16 +1,17 @@
-package com.example.oauth.common.exception.user;
+package com.example.oauth.common.exception.common;
 
 import com.example.oauth.common.exception.BaseExceptionType;
 import org.springframework.http.HttpStatus;
 
-public enum UserTypeException implements BaseExceptionType {
-    USER_NOT_FOUND_EXCEPTION(404, "해당 유저를 찾을 수 없습니다.", HttpStatus.NOT_FOUND);
+public enum OauthTypeException implements BaseExceptionType {
+
+    INVALID_OAUTH_PROVIDER_EXCEPTION(404, "", HttpStatus.NOT_FOUND);
 
     private final int errorCode;
     private final String message;
     private final HttpStatus httpStatus;
 
-    UserTypeException(int errorCode, String message, HttpStatus httpStatus) {
+    OauthTypeException(int errorCode, String message, HttpStatus httpStatus) {
         this.errorCode = errorCode;
         this.message = message;
         this.httpStatus = httpStatus;

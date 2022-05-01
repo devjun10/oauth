@@ -1,10 +1,11 @@
 package com.example.oauth.common.login.token.github;
 
+import com.example.oauth.common.login.token.WebToken;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
 @Getter
-public class GithubToken {
+public class GithubWebToken implements WebToken {
 
     public static final String GITHUB = "github";
     private static final String TOKEN_DELIMETER = " ";
@@ -18,7 +19,7 @@ public class GithubToken {
     @JsonProperty("scope")
     private String scope;
 
-    public String getGithubAccessToken() {
+    public String getAccessToken() {
         return tokenType + TOKEN_DELIMETER + accessToken;
     }
 }

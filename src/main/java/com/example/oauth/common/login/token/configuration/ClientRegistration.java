@@ -21,6 +21,17 @@ public class ClientRegistration {
         this.redirectUrl = redirectUrl;
     }
 
+    @Override
+    public String toString() {
+        return "ClientRegistration{" +
+                "scope='" + scope + '\'' +
+                ", tokenUrl='" + tokenUrl + '\'' +
+                ", userInfoUrl='" + userInfoUrl + '\'' +
+                ", clientId='" + clientId + '\'' +
+                ", clientSecret='" + clientSecret + '\'' +
+                ", redirectUrl='" + redirectUrl + '\'' +
+                '}';
+    }
 
     public String getScope() {
         return scope;
@@ -46,6 +57,7 @@ public class ClientRegistration {
         return redirectUrl;
     }
 
+
     private static class Builder {
         private String scope;
         private String tokenUrl;
@@ -53,6 +65,7 @@ public class ClientRegistration {
         private String clientId;
         private String clientSecret;
         private String redirectUrl;
+        private String redirectUri;
 
         private Builder scope(String scope) {
             this.scope = scope;
@@ -81,6 +94,11 @@ public class ClientRegistration {
 
         private Builder redirectUrl(String redirectUrl) {
             this.redirectUrl = redirectUrl;
+            return this;
+        }
+
+        private Builder redirectUri(String redirectUri) {
+            this.redirectUri = redirectUri;
             return this;
         }
 

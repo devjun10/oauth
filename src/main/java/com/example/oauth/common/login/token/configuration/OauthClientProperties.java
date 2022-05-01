@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @ConstructorBinding
-@ConfigurationProperties(prefix = "oauth.client.github")
+@ConfigurationProperties(prefix = "oauth2")
 public class OauthClientProperties {
 
     private final Map<String, Registration> registration = new HashMap<>();
@@ -45,6 +45,15 @@ public class OauthClientProperties {
             System.out.println(this);
         }
 
+        @Override
+        public String toString() {
+            return "Registration{" +
+                    "clientId='" + clientId + '\'' +
+                    ", clientSecret='" + clientSecret + '\'' +
+                    ", redirectUri='" + redirectUri + '\'' +
+                    '}';
+        }
+
         public String getClientId() {
             return clientId;
         }
@@ -56,6 +65,7 @@ public class OauthClientProperties {
         public String getRedirectUri() {
             return redirectUri;
         }
+
     }
 
     static class Provider {
@@ -70,6 +80,16 @@ public class OauthClientProperties {
             this.userNameAttribute = userNameAttribute;
             this.userAuthrozationUri = userAuthrozationUri;
             System.out.println(this);
+        }
+
+        @Override
+        public String toString() {
+            return "Provider{" +
+                    "tokenUri='" + tokenUri + '\'' +
+                    ", userInfoUri='" + userInfoUri + '\'' +
+                    ", userNameAttribute='" + userNameAttribute + '\'' +
+                    ", userAuthrozationUri='" + userAuthrozationUri + '\'' +
+                    '}';
         }
 
         public String getTokenUri() {

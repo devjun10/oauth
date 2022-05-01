@@ -1,5 +1,6 @@
 package com.example.oauth.common.login.token.github;
 
+import com.example.oauth.common.login.token.TokenParser;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
@@ -8,7 +9,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
-public class GithubTokenParser {
+public class GithubTokenParser implements TokenParser {
 
     private static final String USER_INFORMATION_DELIMETER = ",";
     private static final String USER_INFORMATION_DETAIL_DELIMETER = ":";

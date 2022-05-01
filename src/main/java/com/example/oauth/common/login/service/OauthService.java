@@ -2,60 +2,53 @@ package com.example.oauth.common.login.service;
 
 import com.example.oauth.business.user.domain.User;
 import com.example.oauth.business.user.repository.UserRepository;
-import com.example.oauth.common.login.token.TokenUtils;
+import com.example.oauth.common.login.token.OauthUser;
+import com.example.oauth.common.login.token.WebToken;
+import com.example.oauth.common.login.token.WebTokenUtils;
 import com.example.oauth.common.login.token.configuration.ClientRegistration;
 import com.example.oauth.common.login.token.configuration.InMemoryClientRegisterrRepository;
-import com.example.oauth.common.login.token.github.GithubToken;
-import com.example.oauth.common.login.token.github.GithubTokenUtils;
 import com.example.oauth.common.login.token.github.GithubUser;
+import com.example.oauth.common.login.token.google.GoogleWebTokenUtils;
 import com.example.oauth.common.login.token.jwt.JwtTokenProvider;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
 import java.util.Optional;
 
-import static com.example.oauth.common.login.token.github.GithubToken.GITHUB;
+import static com.example.oauth.common.login.token.configuration.OauthProvider.getOauthProvider;
 
 
 @Service
+@RequiredArgsConstructor
 public class OauthService {
 
     private final Logger logger = LoggerFactory.getLogger(OauthService.class);
     private final InMemoryClientRegisterrRepository inMemoryClientRegisterRepository;
     private final UserRepository userRepository;
     private final FakeRedisRepository fakeRedisRepository;
-    private final TokenUtils tokenUtils;
+    private final WebTokenUtils webTokenUtils;
     private final JwtTokenProvider jwtTokenProvider;
 
-    public OauthService(InMemoryClientRegisterrRepository inMemoryClientRegisterRepository, UserRepository userRepository, FakeRedisRepository fakeRedisRepository, GithubTokenUtils tokenUtils, JwtTokenProvider jwtTokenProvider) {
-        this.inMemoryClientRegisterRepository = inMemoryClientRegisterRepository;
-        this.userRepository = userRepository;
-        this.fakeRedisRepository = fakeRedisRepository;
-        this.tokenUtils = tokenUtils;
-        this.jwtTokenProvider = jwtTokenProvider;
-    }
-
     @Transactional
-    public String login(String code) {
-        ClientRegistration clientRegistration = inMemoryClientRegisterRepository.findByRegistration(GITHUB);
-        HttpEntity<?> accessTokenRequest = tokenUtils.getAccessTokenRequest(clientRegistration, code);
-        GithubToken gitToken = new RestTemplate()
-                .postForEntity(clientRegistration.getTokenUrl(), accessTokenRequest, GithubToken.class)
-                .getBody();
+    public String login(String provider, String code) {
+        ClientRegistration clientRegistration = inMemoryClientRegisterRepository.findByRegistration(getOauthProvider(provider));
+        WebTokenUtils webTokenUtils = new GoogleWebTokenUtils();
+        HttpEntity<?> accessTokenRequest = webTokenUtils.getAccessTokenRequest(clientRegistration, code);
+        WebToken webToken = webTokenUtils.getWebToken(clientRegistration, code, accessTokenRequest);
 
-        Map<String, String> userDetail = tokenUtils.getUserDetailFrom(clientRegistration, gitToken);
-
+        Map<String, String> userDetail = webTokenUtils.getUserDetailFrom(clientRegistration, webToken);
         GithubUser githubUser = GithubUser.from(userDetail);
+        OauthUser oauthUser = OauthUser.from(userDetail);
         String jwtToken = jwtTokenProvider.createJwtToken(githubUser.getGithubId());
 
         save(githubUser, jwtToken);
         logger.info("토큰 발급: {}", jwtToken);
-        return jwtToken;
+        return null;
     }
 
     // TODO 분기문 제거

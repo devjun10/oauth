@@ -9,20 +9,23 @@ public class User {
 
     @Id
     private Long userId;
-    private String name;
-    private String username;
-    private String avatarUrl;
+    private String githubName;
+    private String githubUsername;
+    private String githubAvatarUrl;
     private String email;
     private String location;
     private String githubId;
     private Bio bio;
 
+    private String googleId;
+
+
     @PersistenceConstructor
-    public User(String name, String username, String avatarUrl, String email, String location, Bio bio, String githubId) {
+    public User(String githubName, String githubUsername, String githubAvatarUrl, String email, String location, Bio bio, String githubId) {
         this.userId = userId;
-        this.name = name;
-        this.username = username;
-        this.avatarUrl = avatarUrl;
+        this.githubName = githubName;
+        this.githubUsername = githubUsername;
+        this.githubAvatarUrl = githubAvatarUrl;
         this.email = email;
         this.location = location;
         this.bio = bio;
@@ -33,16 +36,16 @@ public class User {
         return userId;
     }
 
-    public String getName() {
-        return name;
+    public String getGithubName() {
+        return githubName;
     }
 
-    public String getUsername() {
-        return username;
+    public String getGithubUsername() {
+        return githubUsername;
     }
 
-    public String getAvatarUrl() {
-        return avatarUrl;
+    public String getGithubAvatarUrl() {
+        return githubAvatarUrl;
     }
 
     public String getEmail() {

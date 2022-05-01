@@ -5,19 +5,21 @@ import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
 
-@Component
+@Configuration
 public class JwtTokenProvider {
 
     private static final long EXPIRE = 60 * 1000;
 
-    @Value("${oauth.token.secret}")
+    @Value("${oauth2.token.secret}")
     private String secretKey;
 
     private long tokenValidationSeconds;
