@@ -4,6 +4,13 @@
 
 <br/><br/><br/>
 
+
+### OauthService의 중복코드 
+
+- 각 기업에서 제공하는 Oauth
+
+<br/><br/>
+
 ### @ConfigurationProperties
 
 이를 사용하기 위해서는 @EnableConfigurationProperties 어노테이션을 통해 설정 파일의 데이터르 바인딩할 클래스를 넣어준다.

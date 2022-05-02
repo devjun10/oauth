@@ -3,9 +3,11 @@ package com.example.oauth.common.login.token.github;
 
 import com.example.oauth.business.user.domain.Bio;
 import com.example.oauth.common.login.token.OauthUser;
+import lombok.Getter;
 
 import java.util.Map;
 
+@Getter
 public class GithubUser implements OauthUser {
 
     private static final String ID = "id";
@@ -48,46 +50,19 @@ public class GithubUser implements OauthUser {
         return new GithubUser(id, email, name, avatarUrl, bio, location, githubId);
     }
 
-    // TODO if문 중첩 개선
-    public static String getAttribute(Map<String, String> userDetail, String attribute) {
+    private static String getAttribute(Map<String, String> userDetail, String attribute) {
         if (attribute.equals(BIO)) {
             if (userDetail.get(BIO) == null) {
                 return Bio.NOT_REGISTERED.name();
             }
         }
-        String key = KEY_DELIMETER + attribute + KEY_DELIMETER;
-        return userDetail.get(key);
+        return userDetail.get(attribute);
     }
 
     private static String saveGithubId(Map<String, String> userDetail) {
-        String key = KEY_DELIMETER + HTML_URL + KEY_DELIMETER;
-        String[] parsing = userDetail.get(key).split(USERDETAIL_DELIMETER);
+        String[] parsing = userDetail.get(HTML_URL).split(USERDETAIL_DELIMETER);
         String id = parsing[parsing.length - 1];
         userDetail.put(GITHUB_ID, id);
         return parsing[parsing.length - 1];
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getAvatarUrl() {
-        return avatarUrl;
-    }
-
-    public Bio getBio() {
-        return bio;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public String getGithubId() {
-        return githubId;
     }
 }

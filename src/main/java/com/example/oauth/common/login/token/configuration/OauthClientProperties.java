@@ -1,38 +1,32 @@
 package com.example.oauth.common.login.token.configuration;
 
+import lombok.Getter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.ConstructorBinding;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@Getter
 @ConstructorBinding
-@ConfigurationProperties(prefix = "oauth2")
+@ConfigurationProperties(prefix = "oauth")
 public class OauthClientProperties {
 
     private final Map<String, Registration> registration = new HashMap<>();
 
     private final Map<String, Provider> provider = new HashMap<>();
 
-    public OauthClientProperties() {
-    }
-
-    public Map<String, Registration> getRegistration() {
-        return registration;
-    }
+    public OauthClientProperties() {}
 
     public Registration getRegistrationAttribute(String key) {
         return registration.get(key);
-    }
-
-    public Map<String, Provider> getProvider() {
-        return provider;
     }
 
     public Provider getProviderAttribute(String key) {
         return provider.get(key);
     }
 
+    @Getter
     public static class Registration {
         private final String clientId;
         private final String clientSecret;
@@ -42,32 +36,10 @@ public class OauthClientProperties {
             this.clientId = clientId;
             this.clientSecret = clientSecret;
             this.redirectUri = redirectUri;
-            System.out.println(this);
         }
-
-        @Override
-        public String toString() {
-            return "Registration{" +
-                    "clientId='" + clientId + '\'' +
-                    ", clientSecret='" + clientSecret + '\'' +
-                    ", redirectUri='" + redirectUri + '\'' +
-                    '}';
-        }
-
-        public String getClientId() {
-            return clientId;
-        }
-
-        public String getClientSecret() {
-            return clientSecret;
-        }
-
-        public String getRedirectUri() {
-            return redirectUri;
-        }
-
     }
 
+    @Getter
     static class Provider {
         private final String tokenUri;
         private final String userInfoUri;
@@ -79,33 +51,6 @@ public class OauthClientProperties {
             this.userInfoUri = userInfoUri;
             this.userNameAttribute = userNameAttribute;
             this.userAuthrozationUri = userAuthrozationUri;
-            System.out.println(this);
-        }
-
-        @Override
-        public String toString() {
-            return "Provider{" +
-                    "tokenUri='" + tokenUri + '\'' +
-                    ", userInfoUri='" + userInfoUri + '\'' +
-                    ", userNameAttribute='" + userNameAttribute + '\'' +
-                    ", userAuthrozationUri='" + userAuthrozationUri + '\'' +
-                    '}';
-        }
-
-        public String getTokenUri() {
-            return tokenUri;
-        }
-
-        public String getUserInfoUri() {
-            return userInfoUri;
-        }
-
-        public String getUserNameAttribute() {
-            return userNameAttribute;
-        }
-
-        public String getUserAuthrozationUri() {
-            return userAuthrozationUri;
         }
     }
 }

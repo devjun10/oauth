@@ -1,10 +1,11 @@
 package com.example.oauth.common.login.token.google;
 
 import com.example.oauth.common.login.token.WebToken;
-import com.example.oauth.common.login.token.WebTokenUtils;
+import com.example.oauth.common.login.token.WebTokenProvider;
 import com.example.oauth.common.login.token.configuration.ClientRegistration;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -14,7 +15,8 @@ import java.util.Map;
 import static org.springframework.http.HttpHeaders.ACCEPT;
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
-public class GoogleWebTokenUtils implements WebTokenUtils {
+@Component(value = "GoogleWebTokenUtils")
+public class GoogleWebTokenProvider implements WebTokenProvider {
 
     public static final Class<? extends WebToken> GOOGLE = GoogleWebToken.class;
     private static final String CLIENT_ID = "client_id";
@@ -22,7 +24,12 @@ public class GoogleWebTokenUtils implements WebTokenUtils {
     private static final String CODE = "code";
     private static final String GRANT_TYPE = "grant_type";
     private static final String REDIRECT_URI = "redirect_uri";
+    private static final String AUTHORIZATION_CODE = "authorization_code";
 
+    @Override
+    public WebToken getWebToken(ClientRegistration clientRegistration, String code) {
+        return null;
+    }
 
     @Override
     public HttpEntity<?> getAccessTokenRequest(ClientRegistration clientRegistration, String code) {
@@ -96,9 +103,7 @@ public class GoogleWebTokenUtils implements WebTokenUtils {
         payLoad.set(CLIENT_ID, clientRegistration.getClientId());
         payLoad.set(CLIENT_SECRET, clientRegistration.getClientSecret());
         payLoad.set(REDIRECT_URI, clientRegistration.getRedirectUrl());
-        payLoad.set(GRANT_TYPE, "authorization_code");
-        System.out.println(payLoad);
-        System.out.println("------------------------------------------");
+        payLoad.set(GRANT_TYPE, AUTHORIZATION_CODE);
         return payLoad;
     }
 
@@ -116,10 +121,4 @@ public class GoogleWebTokenUtils implements WebTokenUtils {
     public Map<String, String> getUserDetailFrom(ClientRegistration clientRegistration, WebToken gitWebToken) {
         return null;
     }
-
-    @Override
-    public WebToken getWebToken(ClientRegistration clientRegistration, String code, HttpEntity<?> accessTokenRequest) {
-        return null;
-    }
-
 }

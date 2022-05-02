@@ -2,6 +2,7 @@ package com.example.oauth.business.user.domain;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
+import org.springframework.data.relational.core.mapping.Column;
 
 import java.util.Objects;
 
@@ -9,6 +10,7 @@ public class User {
 
     @Id
     private Long userId;
+
     private String githubName;
     private String githubUsername;
     private String githubAvatarUrl;

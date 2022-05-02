@@ -1,7 +1,7 @@
 package com.example.oauth.common.login.controller;
 
 import com.example.oauth.common.login.controller.dto.LoginResponse;
-import com.example.oauth.common.login.service.OauthService;
+import com.example.oauth.common.login.service.GithubOauthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,14 +12,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class OauthController {
 
-    private OauthService oauthService;
+    private GithubOauthService githubOauthService;
 
-    public OauthController(OauthService oauthService) {
-        this.oauthService = oauthService;
+    public OauthController(GithubOauthService githubOauthService) {
+        this.githubOauthService = githubOauthService;
     }
 
     @GetMapping("/api/login/oauth/{provider}")
     public ResponseEntity<LoginResponse> login(@PathVariable("provider") String provider, @RequestParam String code) {
-        return new ResponseEntity<>(new LoginResponse(oauthService.login(provider, code)), HttpStatus.OK);
+        return new ResponseEntity<>(new LoginResponse(githubOauthService.login(provider, code)), HttpStatus.OK);
     }
 }

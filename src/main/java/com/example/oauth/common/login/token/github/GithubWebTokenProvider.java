@@ -1,8 +1,9 @@
 package com.example.oauth.common.login.token.github;
 
 import com.example.oauth.common.login.token.WebToken;
-import com.example.oauth.common.login.token.WebTokenUtils;
+import com.example.oauth.common.login.token.WebTokenProvider;
 import com.example.oauth.common.login.token.configuration.ClientRegistration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -19,23 +20,34 @@ import static org.springframework.http.HttpHeaders.ACCEPT;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
-@Component
-public class GithubWebTokenUtils implements WebTokenUtils {
+@Primary
+@Component(value = "GithubWebTokenUtils")
+public class GithubWebTokenProvider implements WebTokenProvider {
 
+    private static final Class<GithubWebToken> githubClazz = GithubWebToken.class;
     private static final String CLIENT_ID = "client_id";
     private static final String CLIENT_SECRET = "client_secret";
     private static final String CODE = "code";
 
-    private GithubTokenParser githubTokenParser;
+    private GithubWebTokenParser githubTokenParser;
 
-    private GithubWebTokenUtils(GithubTokenParser githubTokenParser) {
+    private GithubWebTokenProvider(GithubWebTokenParser githubTokenParser) {
         this.githubTokenParser = githubTokenParser;
+    }
+
+    @Override
+    public WebToken getWebToken(ClientRegistration clientRegistration, String code) {
+        HttpEntity<?> accessTokenRequest = getAccessTokenRequest(clientRegistration, code);
+        return new RestTemplate()
+                .postForEntity(clientRegistration.getTokenUrl(), accessTokenRequest, githubClazz)
+                .getBody();
     }
 
     @Override
     public HttpEntity<?> getAccessTokenRequest(ClientRegistration clientRegistration, String code) {
         Assert.notNull(clientRegistration, "Registration must be not null.");
         Assert.notNull(code, "Code must be not null.");
+
         MultiValueMap<String, String> headers = getHeader();
         MultiValueMap<String, String> payLoad = getPayLoad(clientRegistration, code);
         return new HttpEntity<>(payLoad, headers);
@@ -68,6 +80,7 @@ public class GithubWebTokenUtils implements WebTokenUtils {
     public Map<String, String> getUserDetailFrom(ClientRegistration clientRegistration, WebToken gitWebToken) {
         Assert.notNull(clientRegistration, "Registration must be not null.");
         Assert.notNull(gitWebToken, "Token must be not null.");
+
         HttpHeaders authorizationIncludedHeader = getAuthorizationIncludedHeader(gitWebToken.getAccessToken());
         ResponseEntity<String> response = new RestTemplate()
                 .exchange(clientRegistration.getUserInfoUrl(), HttpMethod.GET,
@@ -76,13 +89,7 @@ public class GithubWebTokenUtils implements WebTokenUtils {
     }
 
     @Override
-    public WebToken getWebToken(ClientRegistration clientRegistration, String code, HttpEntity<?> accessTokenRequest) {
-        return null;
-    }
-
-    @Override
     public Map<String, String> getUserDetail(String userInformationCode) {
         return githubTokenParser.getUserInformation(userInformationCode);
     }
-
 }

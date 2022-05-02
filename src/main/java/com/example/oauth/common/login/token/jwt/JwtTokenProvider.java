@@ -19,7 +19,7 @@ public class JwtTokenProvider {
 
     private static final long EXPIRE = 60 * 1000;
 
-    @Value("${oauth2.token.secret}")
+    @Value("${oauth.token.secret}")
     private String secretKey;
 
     private long tokenValidationSeconds;

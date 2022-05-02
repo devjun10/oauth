@@ -1,6 +1,6 @@
 package com.example.oauth.common.login.token.github;
 
-import com.example.oauth.common.login.token.TokenParser;
+import com.example.oauth.common.login.token.WebTokenParser;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
-public class GithubTokenParser implements TokenParser {
+public class GithubWebTokenParser implements WebTokenParser {
 
     private static final String USER_INFORMATION_DELIMETER = ",";
     private static final String USER_INFORMATION_DETAIL_DELIMETER = ":";
@@ -22,11 +22,15 @@ public class GithubTokenParser implements TokenParser {
         String[] userInformation = userInformationString.split(USER_INFORMATION_DELIMETER);
         for (String keyAndValue : userInformation) {
             String[] userInformationDetail = keyAndValue.split(USER_INFORMATION_DETAIL_DELIMETER);
-            String key = userInformationDetail[KEY];
+            String key = getKey(userInformationDetail);
             String value = getValue(userInformationDetail);
             userInformationMap.put(key, value);
         }
         return userInformationMap;
+    }
+
+    private String getKey(String[] userInformationDetail) {
+        return userInformationDetail[KEY].replaceAll(ESCAPE_LETTER_DELIMETER, NULL_STRING);
     }
 
     private String getValue(String[] userInformationDetail) {

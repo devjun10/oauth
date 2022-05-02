@@ -22,4 +22,11 @@ public class GithubWebToken implements WebToken {
     public String getAccessToken() {
         return tokenType + TOKEN_DELIMETER + accessToken;
     }
+
+    @Override
+    public String toString() {
+        return "GithubWebToken{" +
+                "accessToken='" + accessToken + '\'' +
+                '}';
+    }
 }
