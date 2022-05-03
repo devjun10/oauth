@@ -27,11 +27,10 @@ public class GoogleWebTokenProvider implements WebTokenProvider {
     private static final String AUTHORIZATION_CODE = "authorization_code";
 
     @Override
-    public WebToken getWebToken(ClientRegistration clientRegistration, String code) {
+    public WebToken createWebToken(ClientRegistration clientRegistration, String code) {
         return null;
     }
 
-    @Override
     public HttpEntity<?> getAccessTokenRequest(ClientRegistration clientRegistration, String code) {
         Assert.notNull(clientRegistration, "Registration must be not null.");
         Assert.notNull(code, "Code must be not null.");
@@ -40,14 +39,12 @@ public class GoogleWebTokenProvider implements WebTokenProvider {
         return new HttpEntity<>(payLoad, headers);
     }
 
-    @Override
     public MultiValueMap<String, String> getHeader() {
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
         headers.set(ACCEPT, APPLICATION_JSON_VALUE);
         return headers;
     }
 
-    @Override
     public MultiValueMap<String, String> getPayLoad(ClientRegistration clientRegistration, String code) {
 //        try {
 //            URL url = new URL(GOOGLE_SNS_TOKEN_BASE_URL);
@@ -107,7 +104,6 @@ public class GoogleWebTokenProvider implements WebTokenProvider {
         return payLoad;
     }
 
-    @Override
     public HttpHeaders getAuthorizationIncludedHeader(String accessToken) {
         return null;
     }

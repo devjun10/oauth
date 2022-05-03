@@ -2,13 +2,14 @@ package com.example.oauth.common.login.token.github;
 
 
 import com.example.oauth.business.user.domain.Bio;
-import com.example.oauth.common.login.token.OauthUser;
+import com.example.oauth.business.user.domain.User;
+import com.example.oauth.common.login.token.OauthClient;
 import lombok.Getter;
 
 import java.util.Map;
 
 @Getter
-public class GithubUser implements OauthUser {
+public class GithubClient implements OauthClient<User> {
 
     private static final String ID = "id";
     private static final String EMAIL = "email";
@@ -29,7 +30,7 @@ public class GithubUser implements OauthUser {
     private final String location;
     private final String githubId;
 
-    public GithubUser(Long id, String email, String name, String avatarUrl, Bio bio, String location, String githubId) {
+    public GithubClient(Long id, String email, String name, String avatarUrl, Bio bio, String location, String githubId) {
         this.id = id;
         this.email = email;
         this.name = name;
@@ -39,15 +40,15 @@ public class GithubUser implements OauthUser {
         this.githubId = githubId;
     }
 
-    public static GithubUser from(Map<String, String> userDetail) {
+    public static GithubClient from(Map<String, String> userDetail) {
         Long id = Long.parseLong(getAttribute(userDetail, ID));
         String email = getAttribute(userDetail, EMAIL);
         String name = getAttribute(userDetail, NAME).replaceAll("'\"'", "");
         Bio bio = Bio.valueOf(getAttribute(userDetail, BIO));
         String avatarUrl = getAttribute(userDetail, AVATAR_URL);
         String location = getAttribute(userDetail, LOCATION);
-        String githubId = saveGithubId(userDetail);
-        return new GithubUser(id, email, name, avatarUrl, bio, location, githubId);
+        String githubId = getGithubId(userDetail);
+        return new GithubClient(id, email, name, avatarUrl, bio, location, githubId);
     }
 
     private static String getAttribute(Map<String, String> userDetail, String attribute) {
@@ -56,13 +57,21 @@ public class GithubUser implements OauthUser {
                 return Bio.NOT_REGISTERED.name();
             }
         }
+        if (attribute.equals(HTML_URL)) {
+            return getGithubId(userDetail);
+        }
         return userDetail.get(attribute);
     }
 
-    private static String saveGithubId(Map<String, String> userDetail) {
+    private static String getGithubId(Map<String, String> userDetail) {
         String[] parsing = userDetail.get(HTML_URL).split(USERDETAIL_DELIMETER);
         String id = parsing[parsing.length - 1];
         userDetail.put(GITHUB_ID, id);
         return parsing[parsing.length - 1];
+    }
+
+
+    public static User toEntity(Map<String, String> userDetail) {
+        return null;
     }
 }

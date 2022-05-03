@@ -24,14 +24,4 @@ public class GoogleWebToken implements WebToken {
     public String getAccessToken() {
         return tokenType + TOKEN_DELIMETER + accessToken;
     }
-
-    @Override
-    public String toString() {
-        return "GoogleToken{" +
-                "accessToken='" + accessToken + '\'' +
-                ", tokenType='" + tokenType + '\'' +
-                ", expiresIn=" + expiresIn +
-                ", scope='" + scope + '\'' +
-                '}';
-    }
 }

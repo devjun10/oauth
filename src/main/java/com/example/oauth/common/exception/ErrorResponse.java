@@ -11,6 +11,7 @@ public class ErrorResponse {
 
     private int code;
     private String message;
+    private String path;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime time;

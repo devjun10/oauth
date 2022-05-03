@@ -36,15 +36,14 @@ public class GithubWebTokenProvider implements WebTokenProvider {
     }
 
     @Override
-    public WebToken getWebToken(ClientRegistration clientRegistration, String code) {
+    public WebToken createWebToken(ClientRegistration clientRegistration, String code) {
         HttpEntity<?> accessTokenRequest = getAccessTokenRequest(clientRegistration, code);
         return new RestTemplate()
                 .postForEntity(clientRegistration.getTokenUrl(), accessTokenRequest, githubClazz)
                 .getBody();
     }
 
-    @Override
-    public HttpEntity<?> getAccessTokenRequest(ClientRegistration clientRegistration, String code) {
+    private HttpEntity<?> getAccessTokenRequest(ClientRegistration clientRegistration, String code) {
         Assert.notNull(clientRegistration, "Registration must be not null.");
         Assert.notNull(code, "Code must be not null.");
 
@@ -53,15 +52,13 @@ public class GithubWebTokenProvider implements WebTokenProvider {
         return new HttpEntity<>(payLoad, headers);
     }
 
-    @Override
-    public MultiValueMap<String, String> getHeader() {
+    private MultiValueMap<String, String> getHeader() {
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
         headers.set(ACCEPT, APPLICATION_JSON_VALUE);
         return headers;
     }
 
-    @Override
-    public MultiValueMap<String, String> getPayLoad(ClientRegistration clientRegistration, String code) {
+    private MultiValueMap<String, String> getPayLoad(ClientRegistration clientRegistration, String code) {
         MultiValueMap<String, String> payLoad = new LinkedMultiValueMap<>();
         payLoad.set(CLIENT_ID, clientRegistration.getClientId());
         payLoad.set(CLIENT_SECRET, clientRegistration.getClientSecret());
@@ -69,8 +66,7 @@ public class GithubWebTokenProvider implements WebTokenProvider {
         return payLoad;
     }
 
-    @Override
-    public HttpHeaders getAuthorizationIncludedHeader(String accessToken) {
+    private HttpHeaders getAuthorizationIncludedHeader(String accessToken) {
         HttpHeaders headers = new HttpHeaders();
         headers.set(AUTHORIZATION, accessToken);
         return headers;
