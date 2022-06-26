@@ -1,10 +1,19 @@
-plugins {
-    id 'org.springframework.boot' version '2.6.7'
-    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-    id 'java'
+buildscript {
+    ext {
+        queryDslVersion = "5.0.0"
+        snippetsDir = file("build/generated-snippets")
+    }
 }
 
-group = 'com.example'
+plugins {
+    id 'org.springframework.boot' version '2.6.0'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
+    id 'com.ewerk.gradle.plugins.querydsl' version '1.0.10'
+    id "org.asciidoctor.jvm.convert" version "3.3.2"
+}
+
+group = 'com.team33'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
@@ -13,22 +22,88 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'mysql:mysql-connector-java:8.0.28'
-    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
-    implementation 'org.springframework.boot:spring-boot-starter-webflux'
-    implementation group: 'org.springframework.data', name: 'spring-data-jdbc', version: '2.3.4'
-    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
-    implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.2'
-    implementation group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.2'
-    implementation group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.2'
-    implementation 'javax.xml.bind:jaxb-api:2.3.1'
-    implementation 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation('org.springframework.boot:spring-boot-starter-web')
+    implementation('org.springframework.boot:spring-boot-starter')
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+
+    implementation('org.springframework.boot:spring-boot-starter-validation')
+
+    implementation("com.querydsl:querydsl-jpa:${queryDslVersion}")
+    implementation("com.querydsl:querydsl-apt:${queryDslVersion}")
+
+    compileOnly(group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.2')
+    runtimeOnly(group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.2')
+    runtimeOnly(group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.2')
+
+    implementation(group: 'org.asciidoctor', name: 'asciidoctorj', version: '2.5.0')
+
+    implementation ('org.springframework.boot:spring-boot-starter-data-redis')
+
+    annotationProcessor('org.projectlombok:lombok')
+    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
+    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
+
+    runtimeOnly('com.h2database:h2')
+    runtimeOnly('mysql:mysql-connector-java:8.0.28')
+
+    compileOnly("org.projectlombok:lombok")
+
+    testAnnotationProcessor('org.projectlombok:lombok')
+    testCompileOnly("org.projectlombok:lombok")
+
+    testImplementation('org.springframework.boot:spring-boot-starter-test')
+    testImplementation('org.springframework.restdocs:spring-restdocs-mockmvc')
+}
+
+jar {
+    enabled = false
 }
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+def querydslDir = "$buildDir/generated/querydsl"
+
+querydsl {
+    jpa = true
+    querydslSourcesDir = querydslDir
+}
+
+sourceSets {
+    main.java.srcDir querydslDir
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+    querydsl.extendsFrom compileClasspath
+}
+
+compileQuerydsl {
+    options.annotationProcessorPath = configurations.querydsl
+}
+
+// --------------------
+// Spring Restdocs 설정
+test {
+    useJUnitPlatform()
+}
+
+asciidoctor {
+    inputs.dir snippetsDir
+    dependsOn test
+}
+
+asciidoctor.doFirst {
+    delete file('src/main/resources/static/docs')
+}
+
+bootJar {
+    dependsOn asciidoctor
+    copy {
+        from './build/docs/asciidoc'
+        into './build/resources/main/static/docs'
+    }
 }

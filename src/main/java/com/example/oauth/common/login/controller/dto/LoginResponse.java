@@ -1,15 +1,13 @@
 package com.example.oauth.common.login.controller.dto;
 
+import lombok.Getter;
+
+@Getter
 public class LoginResponse {
 
-    private String name;
     private String accessToken;
 
-    public LoginResponse(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
+    public LoginResponse(String accessToken) {
+        this.accessToken = accessToken;
     }
 }

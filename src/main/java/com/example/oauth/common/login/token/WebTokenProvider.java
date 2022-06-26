@@ -1,19 +1,19 @@
 package com.example.oauth.common.login.token;
 
-import com.example.oauth.common.login.token.configuration.ClientRegistration;
+import com.example.oauth.common.configuration.oauth.configuration.ClientRegistration;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.stereotype.Component;
-import org.springframework.util.MultiValueMap;
 
-import java.util.Map;
+public abstract class WebTokenProvider implements TokenProvider {
 
-public interface WebTokenProvider extends TokenProvider {
-    Map<String, String> getUserDetail(String body);
+    protected String CLIENT_ID = "client_id";
+    protected String CODE = "code";
+    protected String REDIRECT_URL = "redirect_url";
+    protected String ACCESS_TOKEN = "access_token";
+    protected String CLIENT_SECRET = "client_secret";
 
-    Map<String, String> getUserDetailFrom(ClientRegistration clientRegistration, WebToken gitWebToken);
+    public abstract WebToken createToken(String code, ClientRegistration clientRegistration);
 
-    WebToken createWebToken(ClientRegistration clientRegistration, String code);
+    public abstract HttpEntity<?> createRequestBody(String code, ClientRegistration clientRegistration);
+
+    public abstract OauthClient createOauthClient(String accessToken, ClientRegistration clientRegistration);
 }
-
-

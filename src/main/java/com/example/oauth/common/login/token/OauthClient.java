@@ -1,7 +1,6 @@
 package com.example.oauth.common.login.token;
 
-import java.util.Map;
-
-public interface OauthClient<T> {
-
+public interface OauthClient {
+    String getClientId();
+    String getProfileImage();
 }

@@ -1,5 +1,52 @@
-<h1>Github Login</h1><a href="https://github.com/login/oauth/authorize?client_id=177df418e8432fdceb2b&scope=id,name,email,avatar_url">Login</a><br>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/main.css" />
+    <link rel="shortcut icon" href="/img/github-logo.svg">
+    <title>Sign in to GitHub - GitHub</title>
+</head>
 
+<body>
+<div class="main">
+    <div class="header">
+        <img src="/img/github-logo.svg" alt="https://raw.githubusercontent.com/canerucar/github-login-page/2d0ad69b0755b9c02e3f6e4828459d61af435f85/img/github-logo.svg" width="48" height="48" />
+    </div>
 
+    <div class="signIn">
+        Sign in to GitHub
+    </div>
 
-<h1>Login</h1><a href="https://accounts.google.com/o/oauth2/auth?scope=https://www.googleapis.com/auth/androidpublisher&response_type=code&access_type=offline&redirect_uri=http://localhost:8080/login/oauth2/code/google&client_id=331200476610-nrb3ecqck7e44rcer5p3lbtft5dirke2.apps.googleusercontent.com">Login</a><br>
+    <div class="form">
+        <label for="login_field">Username or email address</label>
+        <input type="text" name="login" id="login_field" tabindex="1" />
+        <label for="password_field">Password
+            <a class="label-link" href="#"> Forgot password? </a>
+        </label>
+        <input type="text" name="login" id="login_field" tabindex="1" />
+        <input
+                type="submit"
+                name="commit"
+                value="Sign In"
+                tabindex="3"
+                class="lastInput"
+        />
+    </div>
+    <div class="login-callout">
+        <!--        New Github? <a href="">Create an account.</a><br/>-->
+        You're Already In Member? <a
+            href="https://github.com/login/oauth/authorize?client_id=912a90df15b22f4ac0c0&scope=id,name,email,avatar_url">Login</a>
+    </div>
+
+    <div class="footer">
+        <ul>
+            <li><a href="">Terms</a></li>
+            <li><a href="">Privacy</a></li>
+            <li><a href="">Security</a></li>
+            <li><a href="">Contact Github</a></li>
+        </ul>
+    </div>
+</div>
+</body>
+</html>

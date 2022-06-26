@@ -1,32 +1,29 @@
 package com.example.oauth.common.login.token.jwt;
 
+import com.example.oauth.common.login.token.TokenProvider;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
 
-@Configuration
-public class JwtTokenProvider {
+@Component
+public class JwtTokenProvider implements TokenProvider {
 
-    private static final long EXPIRE = 60 * 1000;
+    public static final Long FIFTEEN_MINUTES = (long) (1000 * 60 * 30);
+    public static final Long TWO_WEEKS = (long) (1000 * 60 * 12 * 24 * 7);
 
-    @Value("${oauth.token.secret}")
+    @Value("${token.secret}")
     private String secretKey;
 
-    private long tokenValidationSeconds;
-
-    public JwtTokenProvider(String secretKey, long tokenValidationSeconds) {
+    public JwtTokenProvider(String secretKey) {
         this.secretKey = secretKey;
-        this.tokenValidationSeconds = tokenValidationSeconds;
     }
 
     public JwtTokenProvider() {
@@ -37,23 +34,16 @@ public class JwtTokenProvider {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public String createJwtToken(String githubId) {
-        JwtToken jwtToken = new JwtToken(githubId);
+    public String createToken(String githubId, long expire) {
         Claims claims = Jwts.claims();
-        claims.put("githubId", jwtToken.getClaim("githubId"));
+        claims.put("githubId", githubId);
         return Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
                 .setClaims(claims)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + (EXPIRE)))
+                .setExpiration(new Date(System.currentTimeMillis() + (expire)))
                 .signWith(getSigninKey(), SignatureAlgorithm.HS256)
                 .compact();
-    }
-
-    public JwtToken getToken(String token) {
-        Claims body = getClaims(token);
-        String email = body.get("email", String.class);
-        return new JwtToken(email);
     }
 
     private Claims getClaims(String token) {
@@ -64,3 +54,4 @@ public class JwtTokenProvider {
                 .getBody();
     }
 }
+
