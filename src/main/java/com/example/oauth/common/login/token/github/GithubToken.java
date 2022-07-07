@@ -22,13 +22,5 @@ public class GithubToken implements WebToken {
     public String getAccessToken() {
         return tokenType + TOKEN_DELIMETER + accessToken;
     }
-
-    @Override
-    public String toString() {
-        return "GithubToken{" +
-                "accessToken='" + accessToken + '\'' +
-                ", tokenType='" + tokenType + '\'' +
-                '}';
-    }
 }
 

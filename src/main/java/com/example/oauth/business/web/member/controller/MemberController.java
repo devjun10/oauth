@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/issuegroup")
+@RequestMapping("/api/members")
 public class MemberController {
+
+
 }

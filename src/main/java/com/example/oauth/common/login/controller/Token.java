@@ -1,4 +1,4 @@
-package com.example.oauth.common.login.token;
+package com.example.oauth.common.login.controller;
 
 import lombok.Getter;
 

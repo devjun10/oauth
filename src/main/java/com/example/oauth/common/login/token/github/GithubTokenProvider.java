@@ -1,6 +1,6 @@
 package com.example.oauth.common.login.token.github;
 
-import com.example.oauth.common.configuration.oauth.configuration.ClientRegistration;
+import com.example.oauth.common.configuration.login.ClientRegistration;
 import com.example.oauth.common.login.service.GithubUser;
 import com.example.oauth.common.login.token.OauthClient;
 import com.example.oauth.common.login.token.WebToken;

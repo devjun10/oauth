@@ -1,6 +1,6 @@
 package com.example.oauth.common.login.token;
 
-import com.example.oauth.common.configuration.oauth.configuration.ClientRegistration;
+import com.example.oauth.common.configuration.login.ClientRegistration;
 import org.springframework.http.HttpEntity;
 
 public abstract class WebTokenProvider implements TokenProvider {

@@ -15,6 +15,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Duration;
 import java.util.Optional;
 
+import static com.example.oauth.common.login.token.jwt.JwtTokenProvider.FIFTEEN_MINUTES;
+import static com.example.oauth.common.login.token.jwt.JwtTokenProvider.TWO_WEEKS;
+
 
 @Service
 @RequiredArgsConstructor
@@ -22,7 +25,7 @@ public class GithubLoginService implements LoginService {
 
     private final Logger logger = LoggerFactory.getLogger(GithubLoginService.class);
     private final MemberRepository memberRepository;
-    private final JwtTokenProvider jwtTokenProvider;
+    private final JwtTokenProvider jwtTokenProvider = new JwtTokenProvider();
     private final RedisTemplate<String, String> redisTemplate;
 
     @Transactional
@@ -38,8 +41,8 @@ public class GithubLoginService implements LoginService {
 
     @Override
     public Token createToken(OauthClient oauthClient) {
-        String accessToken = jwtTokenProvider.createToken(oauthClient.getClientId(), JwtTokenProvider.FIFTEEN_MINUTES);
-        String refreshToken = jwtTokenProvider.createToken(oauthClient.getClientId(), JwtTokenProvider.TWO_WEEKS);
+        String accessToken = jwtTokenProvider.createToken(oauthClient.getClientId(), FIFTEEN_MINUTES);
+        String refreshToken = jwtTokenProvider.createToken(oauthClient.getClientId(), TWO_WEEKS);
         saveToken(oauthClient.getClientId(), refreshToken);
         return new Token(accessToken, refreshToken);
     }
